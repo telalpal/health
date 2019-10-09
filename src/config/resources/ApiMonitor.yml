@@ -1,0 +1,12 @@
+name: ApiMonitor
+abbreviation: apimon
+checker: PragmaRX\Health\Checkers\ApiMonitor
+notify: true
+column_size: 3
+connection_timeout: 30
+roundtrip_timeout: 30
+include_optional_parameters: true
+targets:
+  - default:
+      name: test swagger definition
+      swagger_path: swagger.json
