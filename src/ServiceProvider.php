@@ -276,6 +276,7 @@ class ServiceProvider extends IlluminateServiceProvider
         $this->commands([
             ConsoleCommands\HealthPanelCommand::class,
             ConsoleCommands\HealthCheckCommand::class,
+            ConsoleCommands\HealthApiMonConfigFromSwagger::class,
         ]);
     }
 
