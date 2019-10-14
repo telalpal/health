@@ -5,6 +5,7 @@ namespace PragmaRX\Health\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\URL;
 use InvalidArgumentException;
+use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 use TypeError;
 
 
@@ -120,7 +121,7 @@ class HealthApiMonConfigFromSwagger extends Command
             array_push($this->checkerConfig['targets'][0]['default']['apis'], $configNode);
         }
 
-        $config = yaml_emit($this->checkerConfig);
+        $config = SymfonyYaml::dump($this->checkerConfig);
         if (!empty($this->outputPath)) {
             file_put_contents ($this->outputPath, $config);
         } else {
@@ -300,10 +301,8 @@ class HealthApiMonConfigFromSwagger extends Command
                 // todo
                 throw new InvalidArgumentException('Multiple content types not supported');
             }
-            foreach ($pathDef['consumes'] as $consumes){
-                $contentType = reset($pathDef['consumes']);
-                $headers += ['Content-Type' => $contentType];
-            }
+            $contentType = reset($pathDef['consumes']);
+            $headers += ['Content-Type' => $contentType];
         }
 
         return $headers;
