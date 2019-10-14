@@ -8,7 +8,8 @@ use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use PragmaRX\Health\Support\Result;
-use function GuzzleHttp\Psr7\stream_for;
+use ReflectionClass;
+use ReflectionException;
 
 class ApiMonitor extends Base
 {
@@ -23,7 +24,7 @@ class ApiMonitor extends Base
     public function check()
     {
         try {
-            [$healthy, $message] = $this->checkApis();
+            list($healthy, $message) = $this->checkApis();
             if (! $healthy) {
                 return $this->makeResult($healthy, $message);
             }
@@ -38,6 +39,8 @@ class ApiMonitor extends Base
 
     /**
      *  Yielding Guzzle Request
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */
@@ -54,21 +57,25 @@ class ApiMonitor extends Base
      *
      * @param array $apiDefinition
      * @return Request
+     * @throws ReflectionException
      */
     private function buildRequestFromPath($apiDefinition) {
         $method = $apiDefinition['method'];
+        $queryParams = $apiDefinition['query'];
         $uri = $apiDefinition['url'];
         $headers = $apiDefinition['headers'];
         $body = $apiDefinition['body'];
-        if ($body) {
-            $body = stream_for(http_build_query($body));
-        }
 
-        return new Request($method, $uri, $headers, $body);
+        $builderClass = $this->target->resource->requestBuilder;
+        $r = new ReflectionClass($builderClass );
+        $instance =  $r->newInstanceWithoutConstructor();
+        return $instance->BuildGuzzleRequest($method, $uri, $queryParams, $headers, $body);
     }
 
     /**
      *  Check all APIs from Swagger definition.
+     *
+     * @throws ReflectionException
      *
      * @return mixed
      */

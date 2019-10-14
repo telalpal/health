@@ -3,7 +3,7 @@ abbreviation: apimon
 checker: PragmaRX\Health\Checkers\ApiMonitor
 notify: "true"
 column_size: "3"
-connection_timeout: "30"
+request_builder: PragmaRX\Health\Checkers\Helpers\GuzzleRequestBuilder
 targets:
   - default:
       apis:

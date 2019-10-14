@@ -21,7 +21,8 @@ const configTemplate = array(
                 [
                     'apis' => []
                 ]
-        ],]
+            ]
+        ]
 );
 
 class HealthApiMonConfigFromSwagger extends Command
@@ -107,8 +108,8 @@ class HealthApiMonConfigFromSwagger extends Command
         $this->checkerConfig = configTemplate;
 
         foreach ($this->iterateSwaggerNodes() as $node){
-            [$path, $method, $methodDef] = $node;
-            [$uri, $headers, $queryParams, $body] = $this->buildConfigNode($path, $method, $methodDef);
+            list($path, $method, $methodDef) = $node;
+            list($uri, $headers, $queryParams, $body) = $this->buildConfigNode($path, $method, $methodDef);
             $configNode = [
                 'url' => $uri,
                 'method' => $method,
@@ -261,7 +262,7 @@ class HealthApiMonConfigFromSwagger extends Command
             $parameterValue = $this->extractParameterValue($parameter);
             switch ($parameter['in']){
                 case 'query':
-                    array_push($queryParams, [$parameterName=>$parameterValue]);
+                    $queryParams[$parameterName] = $parameterValue;
                     break;
                 default:
                     break;
@@ -272,7 +273,7 @@ class HealthApiMonConfigFromSwagger extends Command
     }
 
     /**
-    Build headers array from Swagger Path definition
+     * Build headers array from Swagger Path definition
      *
      * @param array $pathDef
      *
