@@ -61,9 +61,9 @@ class ApiMonitor extends Base
      */
     private function buildRequestFromPath($apiDefinition) {
         $method = $apiDefinition['method'];
-        $queryParams = $apiDefinition['query'];
+        $queryParams = $apiDefinition['query'] ?: [];
         $uri = $apiDefinition['url'];
-        $headers = $apiDefinition['headers'];
+        $headers = $apiDefinition['headers'] ?: [];
         $body = $apiDefinition['body'];
 
         $builderClass = $this->target->resource->requestBuilder;
