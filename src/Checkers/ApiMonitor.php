@@ -117,7 +117,7 @@ class ApiMonitor extends Base
         $req = $reason->getRequest();
         $resp = $reason->getResponse();
         $api = $req->getUri();
-        $respError = $resp->getReasonPhrase();
+        $respError = empty($resp) ? 'No response' : $resp->getReasonPhrase();
         return "Api URL: $api, error: $respError";
     }
 }
