@@ -136,7 +136,7 @@ class HealthApiMonConfigFromSwagger extends Command
             array_push($this->checkerConfig['targets'][0]['default']['apis'], $configNode);
         }
 
-        $config = SymfonyYaml::dump($this->checkerConfig);
+        $config = SymfonyYaml::dump($this->checkerConfig, 10, 2);
         if (!empty($this->outputPath)) {
             file_put_contents ($this->outputPath, $config);
         } else {
