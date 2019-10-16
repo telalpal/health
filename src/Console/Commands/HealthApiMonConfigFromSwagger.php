@@ -15,7 +15,7 @@ const configTemplate = array(
     'checker' => 'PragmaRX\Health\Checkers\ApiMonitor',
     'notify' => 'true',
     'column_size' => '3',
-    'connection_timeout' => '30',
+    'request_builder' => 'PragmaRX\Health\Checkers\Helpers\GuzzleRequestBuilder',
     'targets' =>
         [
             ['default' =>
@@ -33,7 +33,10 @@ class HealthApiMonConfigFromSwagger extends Command
      *
      * @var string
      */
-    protected $signature = 'health:swaggerToApiConf {swaggerPath} {--includeOptParams=1} {--outputPath=}';
+    protected $signature = 'health:swaggerToApiConf {swaggerPath} ' .
+                           '{--includeOptParams=1} ' .
+                           '{--outputPath=} ' .
+                           '{--requestBuilder=}';
 
     /**
      * The console command description.
@@ -62,6 +65,13 @@ class HealthApiMonConfigFromSwagger extends Command
      * @var string
      */
     private $outputPath;
+
+    /**
+     * Path to custom request builder
+     *
+     * @var string
+     */
+     private $customRequestBuilder;
 
     /**
      * Associative array to hold swagger definition
@@ -104,9 +114,14 @@ class HealthApiMonConfigFromSwagger extends Command
         $this->swaggerPath = $this->argument('swaggerPath');
         $this->outputPath = $this->option('outputPath');
         $this->includeOptionalParameters = $this->option('includeOptParams');
+        $this->customRequestBuilder = $this->option('requestBuilder') ;
 
         $this->initSwagger();
         $this->checkerConfig = configTemplate;
+
+        if (!empty($this->customRequestBuilder)) {
+            $this->checkerConfig['request_builder'] = $this->customRequestBuilder;
+        }
 
         foreach ($this->iterateSwaggerNodes() as $node){
             list($path, $method, $methodDef) = $node;
