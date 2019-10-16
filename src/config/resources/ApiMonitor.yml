@@ -10,15 +10,15 @@ targets:
       - url: https://api.example.com/api/v1/path
         method: get
         query:
-        - param1: 1
-        - param2: qwe
+          param1: 1
+          param2: qwe
         body: ~
         headers: ~
       - url: https://api.example.com/api/v1/postpath
         method: post
         query:
-        - param1: 1
-        - param2: qwe
+          param1: 1
+          param2: qwe
         body:
           form_params:
             first_name: name
