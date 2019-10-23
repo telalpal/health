@@ -354,8 +354,9 @@ class HealthApiMonConfigFromSwagger extends Command
                     $form_data[$parameterName] = $parameterValue;
                     break;
                 case 'body':
-                    // todo
-                    throw new InvalidArgumentException('Parameters in body not supported');
+                    // body can have just one parameter, so overriding it
+                    $json = $parameterValue;
+                    break;
                 default:
                     break;
             }
@@ -396,6 +397,9 @@ class HealthApiMonConfigFromSwagger extends Command
         if (!empty($parameterDef['examples'])) {
             $first_example_val = reset($parameterDef['examples']);
             return $first_example_val['value'];
+        }
+        if (!empty($parameterDef['schema']) && isset($parameterDef['schema']['default'])) {
+            return $parameterDef['schema']['default'];
         }
         if (isset($parameterDef['default'])) {
             return $parameterDef['default'];
