@@ -390,14 +390,14 @@ class HealthApiMonConfigFromSwagger extends Command
      * @return mixed
      */
     private function extractParameterValue($parameterDef){
-        if (!empty($parameterDef['schema']) && !empty($parameterDef['schema']['example'])) {
+        if (!empty($parameterDef['schema']) && isset($parameterDef['schema']['example'])) {
             return $parameterDef['schema']['example'];
         }
         if (!empty($parameterDef['examples'])) {
             $first_example_val = reset($parameterDef['examples']);
             return $first_example_val['value'];
         }
-        if (!empty($parameterDef['default'])) {
+        if (isset($parameterDef['default'])) {
             return $parameterDef['default'];
         }
         throw new InvalidArgumentException("Cannot extract value for parameter: $parameterDef[name]");
