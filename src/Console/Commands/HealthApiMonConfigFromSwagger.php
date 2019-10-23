@@ -355,7 +355,11 @@ class HealthApiMonConfigFromSwagger extends Command
                     break;
                 case 'body':
                     // body can have just one parameter, so overriding it
-                    $json = $parameterValue;
+                    if (is_string($parameterValue)) {
+                        $json = json_decode($parameterValue, true);
+                    } else {
+                        $json = $parameterValue;
+                    }
                     break;
                 default:
                     break;
