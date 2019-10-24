@@ -3,7 +3,6 @@
 namespace PragmaRX\Health\Checkers\Helpers;
 
 use GuzzleHttp\Psr7\Request;
-use PragmaRX\Health\Checkers\Helpers\GuzzleRequestBuilderContract;
 use function GuzzleHttp\Psr7\stream_for;
 
 

@@ -340,7 +340,6 @@ class HealthApiMonConfigFromSwagger extends Command
         }
         $form_data = [];
         $json = [];
-        $multipart = [];
         $body = [];
 
         foreach ($pathDef['parameters'] as $parameter){
@@ -366,14 +365,16 @@ class HealthApiMonConfigFromSwagger extends Command
             }
         }
 
+        // we can have only one body parameters source
+        if (!empty($form_data) && !empty($json)) {
+            throw new InvalidArgumentException('Form data provided in multiple places (json, form data)');
+        }
+
         if (!empty($form_data)) {
-            $body['form_params'] = $form_data;
+            $body = $form_data;
         }
         if (!empty($json)) {
-            $body['json'] = $json;
-        }
-        if (!empty($multipart)) {
-            $body['multipart'] = $multipart;
+            $body = $json;
         }
         return empty($body) ? null : $body;
     }
