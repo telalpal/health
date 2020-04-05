@@ -250,11 +250,17 @@ class ServiceProvider extends IlluminateServiceProvider
 
         $this->registerRoutes();
 
-        $this->registerTasks();
-
         $this->registerEventListeners();
 
         $this->registerConsoleCommands();
+    }
+
+    public function boot()
+    {
+        $this->app->booted(function () {
+            $scheduler = app(Schedule::class);
+            $this->registerTasks($scheduler);
+        });
     }
 
     private function registerResourcesRoutes()
@@ -276,6 +282,7 @@ class ServiceProvider extends IlluminateServiceProvider
         $this->commands([
             ConsoleCommands\HealthPanelCommand::class,
             ConsoleCommands\HealthCheckCommand::class,
+            ConsoleCommands\HealthApiMonConfigFromSwagger::class,
         ]);
     }
 
@@ -333,16 +340,16 @@ class ServiceProvider extends IlluminateServiceProvider
 
     /**
      * Register scheduled tasks.
+     *
+     * @param Schedule $scheduler
      */
-    private function registerTasks()
+    private function registerTasks($scheduler)
     {
         if (
             config('health.scheduler.enabled') &&
             ($frequency = config('health.scheduler.frequency')) &&
             config('health.notifications.enabled')
         ) {
-            $scheduler = instantiate(Schedule::class);
-
             $scheduler
                 ->call($this->healthService->getSilentChecker())
                 ->$frequency();

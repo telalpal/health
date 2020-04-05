@@ -1,0 +1,27 @@
+name: ApiMonitor
+abbreviation: apimon
+checker: PragmaRX\Health\Checkers\ApiMonitor
+notify: "true"
+column_size: "3"
+request_builder: PragmaRX\Health\Checkers\Helpers\GuzzleRequestBuilder
+targets:
+  - default:
+      apis:
+      - url: https://api.example.com/api/v1/path
+        method: get
+        query:
+          param1: 1
+          param2: qwe
+        body: ~
+        headers: ~
+      - url: https://api.example.com/api/v1/postpath
+        method: post
+        query:
+          param1: 1
+          param2: qwe
+        body:
+          form_params:
+            first_name: name
+            last_name: last
+        headers:
+          Content-Type: application/x-www-form-urlencoded
